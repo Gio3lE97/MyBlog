@@ -2,13 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
 
-# Costanti
-N = 3  #n° lati
-rho = 1 #lunghezza raggio
-frames_per_k = 90  # 3 secondi a 30 fps, la si puo accorcercare per velocizzare la costruzione
+# constants
+N = 3  # number of sides
+rho = 1  # radius length
+frames_per_k = 90  # 3 seconds at 30 fps, can be shortened to speed up the animation
 total_frames = N * frames_per_k
 
-# Funzione che calcola il vettore β
+# Function that calculates the β vector
 def beta_vector(k, alpha, N):
     angle1 = 2 * np.pi * (k + 1) / N
     angle2 = 2 * np.pi * k / N
@@ -19,7 +19,7 @@ def beta_vector(k, alpha, N):
     y = np.sin(angle1) * sin2 + np.sin(angle2) * cos2
     return rho * x, rho * y
 
-# Setup grafico
+# Plot setup
 fig, ax = plt.subplots()
 ax.set_xlim(-1.5, 1.5)
 ax.set_ylim(-1.5, 1.5)
@@ -27,9 +27,9 @@ ax.set_aspect('equal')
 ax.grid(True)
 
 quiver = ax.quiver(0, 0, 0, 0, angles='xy', scale_units='xy', scale=1, color='blue')
-trajectory_line, = ax.plot([], [], 'r-', lw=1)  # linea rossa della traiettoria
+trajectory_line, = ax.plot([], [], 'r-', lw=1)  # red line representing the trajectory
 
-# Lista per salvare la traiettoria
+# Lists to store the trajectory points
 trajectory_x = []
 trajectory_y = []
 
@@ -39,10 +39,10 @@ def update(frame):
 
     x, y = beta_vector(k, alpha, N)
 
-    # aggiorna la freccia
+    # update vector
     quiver.set_UVC(x, y)
 
-    # aggiorna la traiettoria
+    # update trajectory
     trajectory_x.append(x)
     trajectory_y.append(y)
     trajectory_line.set_data(trajectory_x, trajectory_y)
@@ -50,10 +50,9 @@ def update(frame):
     ax.set_title(f"k = {k}, α = {alpha:.2f} rad")
     return quiver, trajectory_line
 
-# Animazione
+# Animation
 ani = FuncAnimation(fig, update, frames=total_frames, interval=1000/30, blit=False)
 
-# Salva .gif
-ani.save(f"poligono_{N}_lati.gif", writer=PillowWriter(fps=30))
-
+# Save .gif
+#ani.save(f"polygon_{N}_sides.gif", writer=PillowWriter(fps=30))
 plt.show()
